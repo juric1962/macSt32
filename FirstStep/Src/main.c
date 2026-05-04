@@ -21,6 +21,7 @@
 #include "adc.h"
 #include "dma.h"
 #include "rtc.h"
+#include "spi.h"
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
@@ -97,6 +98,9 @@ int main(void)
   MX_RTC_Init();
   MX_UART4_Init();
   MX_USART1_UART_Init();
+  MX_SPI1_Init();
+  MX_UART5_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -162,7 +166,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_SYSTICK_Callback(void)
+{
+  
+}
 /* USER CODE END 4 */
 
 /**
