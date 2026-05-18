@@ -385,7 +385,7 @@ void opros_ts(unsigned char num, unsigned char port, unsigned char pin,
               struct struct_ts *ts)
 
 {
-  if (port & pin)
+  if (HAL_GPIO_ReadPin(port , pin) )
     ts->tek_pin = 0;
   else
     ts->tek_pin = 1;
@@ -424,7 +424,8 @@ void sending_ppp_proverka(void) {
     return;
   }
 
-  UDR0 = buf_tx_232[count_tx_ppp];
+  //UDR0 = buf_tx_232[count_tx_ppp];
+  HAL_UART_Transmit_IT(&huart5, &buf_tx_232[count_tx_ppp],1 );
   if (Regim == RG_DEBAG)
     UDR3 = buf_tx_232[count_tx_ppp];
   count_tx_ppp++;
@@ -453,18 +454,24 @@ void sending_ppp_pac(void) {
   if (fl_reg3.add_byte == 1) {
     fl_reg3.add_byte = 0;
     if (buf_tx_232[count_tx_ppp] == 0x7e) {
-      UDR0 = 0x5e;
+      //UDR0 = 0x5e;
+      tempo = 0x5e;
+      HAL_UART_Transmit_IT(&huart5, &tempo,1 );
       if (Regim == RG_DEBAG)
         UDR3 = 0x5e;
       return;
     }
     if (buf_tx_232[count_tx_ppp] == 0x7d) {
-      UDR0 = 0x5d;
+      //UDR0 = 0x5d;
+       tempo = 0x5d;
+       HAL_UART_Transmit_IT(&huart5, &tempo,1 );
       if (Regim == RG_DEBAG)
         UDR3 = 0x5d;
       return;
     }
-    UDR0 = buf_tx_232[count_tx_ppp] + 0x20;
+    //UDR0 = buf_tx_232[count_tx_ppp] + 0x20;
+    tempo = buf_tx_232[count_tx_ppp] + 0x20;
+     HAL_UART_Transmit_IT(&huart5, &tempo,1 );
     if (Regim == RG_DEBAG)
       UDR3 = buf_tx_232[count_tx_ppp] + 0x20;
     return;
@@ -478,7 +485,9 @@ void sending_ppp_pac(void) {
   if ((buf_tx_232[count_tx_ppp] == 0x7e) ||
       (buf_tx_232[count_tx_ppp] == 0x7d)) {
     fl_reg3.add_byte = 1;
-    UDR0 = 0x7d;
+    //UDR0 = 0x7d;
+    tempo = 0x7d;
+    HAL_UART_Transmit_IT(&huart5, &tempo,1 );
     if (Regim == RG_DEBAG)
       UDR3 = 0x7d;
     return;
@@ -486,7 +495,9 @@ void sending_ppp_pac(void) {
 
   if ((buf_tx_232[count_tx_ppp] == 17) || (buf_tx_232[count_tx_ppp] == 19)) {
     fl_reg3.add_byte = 1;
-    UDR0 = 0x7d;
+    //UDR0 = 0x7d;
+    tempo = 0x7d;
+    HAL_UART_Transmit_IT(&5, &tempo,1 );
     if (Regim == RG_DEBAG)
       UDR3 = 0x7d;
     return;
@@ -494,14 +505,18 @@ void sending_ppp_pac(void) {
 
   if ((buf_tx_232[count_tx_ppp] < 0x20) && (fl_ip.act_ip_end == 1)) {
     fl_reg3.add_byte = 1;
-    UDR0 = 0x7d;
+    //UDR0 = 0x7d;
+    tempo = 0x7d;
+    HAL_UART_Transmit_IT(&huart5, &tempo,1 );
     if (Regim == RG_DEBAG)
       UDR3 = 0x7d;
     return;
   }
 
 exit_tx:
-  UDR0 = buf_tx_232[count_tx_ppp];
+  //UDR0 = buf_tx_232[count_tx_ppp];
+  tempo = buf_tx_232[count_tx_ppp];
+  HAL_UART_Transmit_IT(&huart5, &tempo,1 );
   if (Regim == RG_DEBAG)
     UDR3 = buf_tx_232[count_tx_ppp];
 }
@@ -764,8 +779,10 @@ __interrupt void TIMER0_COMPA_interrupt(void) {
 //////////////////////////////////////////////1/16000000///////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = TIMER2_COMPA_vect // 1 миллисекунда
-__interrupt void TIMER2_COMPA_interrupt(void) {
+//#pragma vector = TIMER2_COMPA_vect // 1 миллисекунда
+//__interrupt void TIMER2_COMPA_interrupt(void) 
+void HAL_SYSTICK_Callback(void)
+{
 
   unsigned char temp;
   term.time_out_loop = 0;
@@ -790,7 +807,9 @@ __interrupt void TIMER2_COMPA_interrupt(void) {
       fl_cts_232.on = 0;
       if (count_tx_ppp == 0) {
         S2_RD;
-        UDR0 = buf_tx_232[0];
+        //UDR0 = buf_tx_232[0];
+        tempo = buf_tx_232[0];
+        HAL_UART_Transmit_IT(&huart5, &tempo,1 );
         if (Regim == RG_DEBAG)
           UDR3 = buf_tx_232[0];
       } else
@@ -804,7 +823,9 @@ __interrupt void TIMER2_COMPA_interrupt(void) {
       fl_cts_232.on = 0;
       if (count_tx_ppp == 0) {
         S2_RD;
-        UDR0 = buf_tx_232[0];
+        //UDR0 = buf_tx_232[0];
+        tempo = buf_tx_232[0];
+        HAL_UART_Transmit_IT(&huart5, &tempo,1 );
         if (Regim == RG_DEBAG)
           UDR3 = buf_tx_232[0];
       } else
@@ -823,18 +844,22 @@ __interrupt void TIMER2_COMPA_interrupt(void) {
   if (Buf1_rx_ppp.check_busy == TRUE) {
     if (Buf1_rx_ppp.busy == FALSE) {
       Buf1_rx_ppp.check_busy = FALSE;
-      temp = UDR0;
-      UCSR0B = UCSR0B | RXEN;
-      UCSR0B = UCSR0B | RXCIE;
+      //temp = UDR0;
+      //UCSR0B = UCSR0B | RXEN;
+      //UCSR0B = UCSR0B | RXCIE;
+      __HAL_UART_FLUSH_DRREGISTER(&huart5);
+      __HAL_UART_ENABLE_IT(&huart5, UART_IT_RXNE);
     }
   }
 
   if (Buf2_rx_ppp.check_busy == TRUE) {
     if (Buf2_rx_ppp.busy == FALSE) {
       Buf2_rx_ppp.check_busy = FALSE;
-      temp = UDR0;
-      UCSR0B = UCSR0B | RXEN;
-      UCSR0B = UCSR0B | RXCIE;
+      //temp = UDR0;
+      //UCSR0B = UCSR0B | RXEN;
+      //UCSR0B = UCSR0B | RXCIE;
+      __HAL_UART_FLUSH_DRREGISTER(&huart5);
+      __HAL_UART_ENABLE_IT(&huart5, UART_IT_RXNE);
     }
   }
 
@@ -851,8 +876,8 @@ next_step00:
   {
     At_com.cnt_tm_out--;
     if (At_com.cnt_tm_out == 0) {
-      UCSR0B = UCSR0B & ~RXEN;
-      UCSR0B = UCSR0B & ~RXCIE;
+      //UCSR0B = UCSR0B & ~RXEN;
+      //UCSR0B = UCSR0B & ~RXCIE;
       At_com.cnt_rx_out = 0;
       fl_at_com.tm_out = 1;
       fl_at_com.rx_rec = 0;
@@ -868,8 +893,8 @@ next_step0:
     goto next_step1;
   At_com.cnt_rx_out--;
   if (At_com.cnt_rx_out == 0) {
-    UCSR0B = UCSR0B & ~RXEN;
-    UCSR0B = UCSR0B & ~RXCIE;
+    //UCSR0B = UCSR0B & ~RXEN;
+    //UCSR0B = UCSR0B & ~RXCIE;
     fl_at_com.rx_rec = 1;
     S2_OFF;
   } // счетчик межбайтовый промежуток
@@ -1389,56 +1414,60 @@ next_tm7:;
   //////////////////////////////////////////
 }
 
-#pragma vector = USART0_RX_vect
+//#pragma vector = USART0_RX_vect
 
-__interrupt void USART0_RX_interrupt(void)
+void AVR_USART0_RX_interrupt(void)
 
 {
-  unsigned char data;
-  data = UDR0;
+  
+
   if ((Regim == MODEM_ONLY) || (Regim == MODEM_ONLY_R)) {
-    UDR2 = data;
-    return;
+    HAL_UART_Transmit_IT(&huart2, &sim800Data, 1 );
+    goto razr;
   } // dobavka
-  if (Regim == RG_DEBAG)
-    UDR1 = data;
+   
+  
   //* в терминальном режиме заполняем массив
   if (fl_at_mom_232 == 1) {
 
-    Appl_seq_buf[point_Head] = data;
+    Appl_seq_buf[point_Head] = sim800Data;
     point_Head++;
     point_Head = point_Head & 0x3f;
-    return;
+    goto razr;
   }
 
   //*
 
   if (command_AT == TRUE) {
     if (fl_at_com.rx_en == 0)
-      return; // dobavka 08.11.2007
+      goto razr; // dobavka 08.11.2007
 
     S2_GR;
     At_com.cnt_rx_out = At_com.vol_rx_out;
     At_com.cnt_tm_out = 0;
     if (At_com.cnt_rx < LN_BUF_AT) {
-      At_com.buf[At_com.cnt_rx] = data;
+      At_com.buf[At_com.cnt_rx] = sim800Data;
       At_com.cnt_rx++;
     }
-    return;
+    goto razr;
   }
 
   cnt_incom++;
   if (fl_rx_ppp.switcher == 0)
-    recive_buf1(data);
+    recive_buf1(sim800Data);
   else
-    recive_buf2(data);
+    recive_buf2(sim800Data);
+
+ 
+razr:
+  HAL_UART_Receive_IT(&huart5, &sim800Data, 1);   
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma vector = USART0_TX_vect
-__interrupt void USART0_TX_interrupt(void)
+//#pragma vector = USART0_TX_vect
+void AVR_USART0_TX_interrupt(void)
 
 {
 
@@ -1472,70 +1501,74 @@ __interrupt void USART0_TX_interrupt(void)
 
 */
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = USART1_RX_vect
+//#pragma vector = USART1_RX_vect
 
-__interrupt void USART1_RX_interrupt(void)
+void AVR_USART1_RX_interrupt(void)
 
 {
-  unsigned char data;
 
-  data = UDR1;
+  //data = UDR1;
   S4_GR;
   Rs485_2.cnt_tm_rx_out = Rs485_2.vol_tm_rx_out;
   Rs485_2.cnt_tm_out = 0;
   if (Rs485_2.cnt_bt_rx_tx < MAX_BUF_RS485_2) {
-    Rs485_2_buf_rx_tx[Rs485_2.cnt_bt_rx_tx] = data;
+    Rs485_2_buf_rx_tx[Rs485_2.cnt_bt_rx_tx] = data_UDR1;
     Rs485_2.cnt_bt_rx_tx++;
   } else
     fl_485_2.over = 1;
+    HAL_UART_Receive_IT(&huart1,&data_UDR1,1);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma vector = USART1_TX_vect
+//#pragma vector = USART1_TX_vect
 
-__interrupt void USART1_TX_interrupt(void)
+void AVR_USART1_TX_interrupt(void)
 
 {
 
   if (Rs485_2.cnt_bt_rx_tx == 0)
     goto end_tx1;
-
-  UDR1 = *Rs485_2.p_data485++;
+  HAL_UART_Transmit_IT(&huart1, &Rs485_2.p_data485, 1 );
+  //UDR1 = *Rs485_2.p_data485++;
+  Rs485_2.p_data485++;
   Rs485_2.cnt_bt_rx_tx--;
   return;
 end_tx1:
-  UCSR1B = UCSR1B & ~TXCIE;
+  //UCSR1B = UCSR1B & ~TXCIE;
+  __HAL_UART_DISABLE_IT(&huart1, UART_IT_TXE);
   Rs485_2.cnt_bt_rx_tx = 0;
   Rs485_2.cnt_tm_tx_out = Rs485_2.vol_tm_tx_out;
   if (Rs485_2.cnt_tm_tx_out == 0) {
     S4_OFF;
     Rs485_2.cnt_tm_out = Rs485_2.vol_tm_out;
     CLR_RTS3;                       // togle to receiv mode
-    UCSR1B = UCSR1B | RXEN | RXCIE; // togle to receiv mode ;
+    //UCSR1B = UCSR1B | RXEN | RXCIE; // togle to receiv mode ;
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = USART2_RX_vect
+//#pragma vector = USART2_RX_vect
 
-__interrupt void USART2_RX_interrupt(void)
+void AVR_USART2_RX_interrupt(void)
 
 {
-  unsigned char data;
-  data = UDR2;
+ 
 
   if ((Regim == MODEM_ONLY) || (Regim == MODEM_ONLY_R)) {
-    UDR0 = data;
+    //UDR0 = data;
+    HAL_UART_Transmit_IT(&huart5, &data_UDR2,1 );
     return;
   } // dobavka
   if (fl_at_mom_232 == 1) {
     if (vol_tx_ppp >= VOL_TX_PPP)
       vol_tx_ppp = 0;
-    buf_tx_232[vol_tx_ppp] = data;
+    buf_tx_232[vol_tx_ppp] = data_UDR2;
     vol_tx_ppp++;
+    HAL_UART_Receive_IT(&huart2,&data_UDR2,1);
     return;
   }
 
@@ -1543,49 +1576,55 @@ __interrupt void USART2_RX_interrupt(void)
   Rs232_2.cnt_tm_rx_out = Rs232_2.vol_tm_rx_out;
   Rs232_2.cnt_tm_out = 0;
   if (Rs232_2.cnt_bt_rx_tx < MAX_BUF_RS232_2) {
-    Rs232_2_buf_rx_tx[Rs232_2.cnt_bt_rx_tx] = data;
+    Rs232_2_buf_rx_tx[Rs232_2.cnt_bt_rx_tx] = data_UDR2;
     Rs232_2.cnt_bt_rx_tx++;
   } else
     fl_232_2.over = 1;
+    HAL_UART_Receive_IT(&huart2,&data_UDR2,1);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma vector = USART2_TX_vect
+//#pragma vector = USART2_TX_vect
 
-__interrupt void USART2_TX_interrupt(void)
-
+//__interrupt void USART2_TX_interrupt(void)
+void AVR_USART2_TX_interrupt(void)
 {
 
   if (Rs232_2.cnt_bt_rx_tx == 0)
     goto end_tx;
 
-  UDR2 = *Rs232_2.p_data485++;
+  HAL_UART_Transmit_IT(&huart2, &Rs232_2.p_data485, 1 );
+   Rs232_2.p_data485++;
+  //UDR2 = *Rs232_2.p_data485++;
   Rs232_2.cnt_bt_rx_tx--;
   return;
 end_tx:
-  UCSR2B = UCSR2B & ~TXCIE;
+ // UCSR2B = UCSR2B & ~TXCIE;
+  __HAL_UART_DISABLE_IT(&huart2, UART_IT_TXE);
   Rs232_2.cnt_bt_rx_tx = 0;
   Rs232_2.cnt_tm_tx_out = Rs232_2.vol_tm_tx_out;
   if (Rs232_2.cnt_tm_tx_out == 0) {
     S5_OFF;
     Rs232_2.cnt_tm_out = Rs232_2.vol_tm_out;
     CLR_RTS2;                       // togle to receiv mode
-    UCSR2B = UCSR2B | RXEN | RXCIE; // togle to receiv mode ;
+    //UCSR2B = UCSR2B | RXEN | RXCIE; // togle to receiv mode ;
+    __HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = USART3_RX_vect
-
-__interrupt void USART3_RX_interrupt(void)
-
+//#pragma vector = USART3_RX_vect
+// call old AVR ISR
+//  HAL_UART__RxCpltCallBack(UART_HandlTypeDef *huart)
+//__interrupt void USART3_RX_interrupt(void)
+void AVR_USART3_RX_interrupt(void)
 {
   unsigned char data;
 
-  data = UDR3;
+  data = sim800Data;
   S3_GR;
   Rs485_1.cnt_tm_rx_out = Rs485_1.vol_tm_rx_out;
   Rs485_1.cnt_tm_out = 0;
@@ -1594,32 +1633,39 @@ __interrupt void USART3_RX_interrupt(void)
     Rs485_1.cnt_bt_rx_tx++;
   } else
     fl_485_1.over = 1;
+     HAL_UART_Receive_IT(&huart5,&sim800Data,1);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma vector = USART3_TX_vect
+//#pragma vector = USART3_TX_vect
 
-__interrupt void USART3_TX_interrupt(void)
-
+//__interrupt void USART3_TX_interrupt(void)
+// call old AVR ISR
+//  HAL_UART__TxCpltCallBack(UART_HandlTypeDef *huart)
+void AVR_USART3_TX_interrupt(void)
 {
 
   if (Rs485_1.cnt_bt_rx_tx == 0)
     goto end_tx2;
 
-  UDR3 = *Rs485_1.p_data485++;
+  //UDR3 = *Rs485_1.p_data485++;
+   HAL_UART_Transmit_IT(&huart3, &Rs485_1.p_data485, 1 );
+   Rs485_1.p_data485++;
   Rs485_1.cnt_bt_rx_tx--;
   return;
 end_tx2:
-  UCSR3B = UCSR3B & ~TXCIE;
+  //UCSR3B = UCSR3B & ~TXCIE;
+ __HAL_UART_DISABLE_IT(&huart3, UART_IT_TXE);
   Rs485_1.cnt_bt_rx_tx = 0;
   Rs485_1.cnt_tm_tx_out = Rs485_1.vol_tm_tx_out;
   if (Rs485_1.cnt_tm_tx_out == 0) {
     S3_OFF;
     Rs485_1.cnt_tm_out = Rs485_1.vol_tm_out;
     CLR_RTS1;                       // togle to receiv mode
-    UCSR3B = UCSR3B | RXEN | RXCIE; // togle to receiv mode ;
+    //UCSR3B = UCSR3B | RXEN | RXCIE; // togle to receiv mode ;
+    __HAL_UART_ENABLE_IT(&huart3, UART_IT_RXNE);
   }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1689,6 +1735,32 @@ __interrupt void ADC_interrupt(void) {
   }
 }
 
+////////////
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
+{
+    if (hadc->Instance == ADC1)
+    {
+        count_summa_adc++;
+        summa_adc[0] = summa_adc[0] + adc_buffer[0];
+        summa_adc[1] = summa_adc[1] + adc_buffer[1];
+        summa_adc[2] = summa_adc[2] + adc_buffer[2];
+
+  if ( count_summa_adc == 0 ) {
+    
+      modbus_mem1[AD_TEMP] = summa_adc[0] >> 8;
+      temperatura = modbus_mem1[AD_TEMP];
+      modbus_mem1[AD_TIT1] = summa_adc[1] >> 8;
+      modbus_mem1[AD_TIT1 + 1] = summa_adc[2] >> 8;
+
+    summa_adc[0] = 0;
+    summa_adc[1] = 0;
+    summa_adc[2] = 0;
+  }
+}
+}
+
+
+
 #pragma vector = PCINT2_vect
 __interrupt void PCINT2_interrupt(void) {
 
@@ -1709,4 +1781,38 @@ __interrupt void PCINT2_interrupt(void) {
     // EIMSK=EIMSK & ~ 0x02;    // disable myself
     PCMSK2 = PCMSK2 & ~0x80;
   }
+}
+
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+  
+   if(huart->Instance==USART3)
+  {
+    AVR_USART3_TX_interrupt();
+  }
+  
+   if(huart->Instance==USART2)
+  {
+    AVR_USART2_TX_interrupt();
+  }
+
+   if(huart->Instance==USART5)
+  {
+    AVR_USART0_TX_interrupt();
+  }
+}
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  
+  if(huart->Instance==USART3) AVR_USART3_RX_interrupt();
+  
+  if(huart->Instance==USART2) AVR_USART2_RX_interrupt();
+  
+  if(huart->Instance==USART1) AVR_USART1_RX_interrupt();
+  
+  if(huart->Instance==USART5) AVR_USART0_RX_interrupt();
+  
 }
