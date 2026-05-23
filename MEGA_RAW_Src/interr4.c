@@ -16,34 +16,34 @@ extern unsigned char trevoga;
 
 char dabl, flag_arhiv_prihod;
 
-extern int tim_prihod_uhod;
-extern int glutch5, window_prihod_uhod;
+extern int16_t tim_prihod_uhod;
+extern int16_t glutch5, window_prihod_uhod;
 extern unsigned char prihod_uhod;
 extern unsigned char nomer_tab;
 extern char podnos;
 
-extern unsigned int timer_vhod, timer_autovzat;
+extern uint16_t timer_vhod, timer_autovzat;
 
-extern unsigned int glutch6;
-extern unsigned int glutch;
+extern uint16_t glutch6;
+extern uint16_t glutch;
 
 extern unsigned char cnt_snd;
 extern char bit_registr1;
 extern unsigned char sel_modul;
-extern unsigned int cnt_sec;
+extern uint16_t cnt_sec;
 
-extern unsigned int cnt_supervosor;
+extern uint16_t cnt_supervosor;
 
 extern unsigned char simka; // dobavka
 
 extern unsigned char layer_PPP;
 
-extern unsigned long int cnt_outcom, cnt_incom;
+extern uint32_t cnt_outcom, cnt_incom;
 extern unsigned char time_cnt_ch_time;
 
-unsigned int crc_m1(unsigned char *ka, unsigned int num, unsigned int crc);
-void WrArrayToFlesh(unsigned int adres_flesh, unsigned char *adres_ozu,
-                    unsigned int num, unsigned char flag, unsigned char znach);
+uint16_t crc_m1(unsigned char *ka, uint16_t num, uint16_t crc);
+void WrArrayToFlesh(uint16_t adres_flesh, unsigned char *adres_ozu,
+                    uint16_t num, unsigned char flag, unsigned char znach);
 
 void lock_it(void);
 
@@ -53,18 +53,18 @@ extern void tx_rs485_2(void);
 extern void tx_rs232_2(void);
 extern void tx_rs232_time(void);
 extern void test_fram(void);
-extern unsigned long int burst_ds_r(void);
+extern uint32_t burst_ds_r(void);
 
 unsigned char check_cts(void);
 
-extern unsigned int func_crc_tii(void);
-extern __no_init unsigned int crc_tii;
-extern __no_init unsigned int cnt_tii[8];
+extern uint16_t func_crc_tii(void);
+extern __no_init uint16_t crc_tii;
+extern __no_init uint16_t cnt_tii[8];
 
 extern char ip_change;
 extern unsigned char Fl_ch_sim;
 ;                                                   // dobavka
-extern unsigned long int cnt_no_link, cnt_link_res; // dobavka
+extern uint32_t cnt_no_link, cnt_link_res; // dobavka
 
 // extern unsigned char count_block_net;
 
@@ -82,8 +82,8 @@ unsigned char cnt_clr_wdt, cnt_flag_out;
 extern unsigned char cnt_rst_lcp, vol_cnt_rst_lcp;
 extern unsigned char cnt_rst_ipcp, vol_cnt_rst_ipcp;
 extern unsigned char cnt_rst_pap, vol_cnt_rst_pap;
-extern unsigned int cnt_lcp_tm_out, cnt_ipcp_tm_out;
-extern unsigned int cnt_pap_tm_out;
+extern uint16_t cnt_lcp_tm_out, cnt_ipcp_tm_out;
+extern uint16_t cnt_pap_tm_out;
 
 extern struct {
   unsigned char over_buf : 1;
@@ -104,34 +104,34 @@ extern struct // структура, описывающая объект пер�
   enum bool link_waits;   // ожидание квитка на контроль связи
   enum bool link;         // контроль связи
   enum bool nat;          // контроль nat
-  unsigned int cnt_link;  // счетчик
-  unsigned int cnt_nat;   // счетчик
-  unsigned int vol_link;  // значение
-  unsigned int vol_nat;   // //значение
-  unsigned int vol_waits; // значение времени квитка ожидания контроля связи
+  uint16_t cnt_link;  // счетчик
+  uint16_t cnt_nat;   // счетчик
+  uint16_t vol_link;  // значение
+  uint16_t vol_nat;   // //значение
+  uint16_t vol_waits; // значение времени квитка ожидания контроля связи
   unsigned char cnt_try;  // счетчик попыток получить квиток
   unsigned char vol_try;  // rjkbxtcndj попыток получить квиток
-  unsigned int vol_nat_r; // счетчик
+  uint16_t vol_nat_r; // счетчик
 } Control;
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!структуры приложения
 extern struct {
   unsigned char id;
-  unsigned int p_in; // указатель свободной ячейки
-  unsigned int p_out;
-  unsigned int p_out_kv;
-  unsigned int crc;
-  unsigned int cnt_waits; // счетчик ожидания квитка
+  uint16_t p_in; // указатель свободной ячейки
+  uint16_t p_out;
+  uint16_t p_out_kv;
+  uint16_t crc;
+  uint16_t cnt_waits; // счетчик ожидания квитка
   unsigned char cnt_try;  // счетчик попыток получить квиток
-  unsigned int l_data;    // длина посылаемых данных
+  uint16_t l_data;    // длина посылаемых данных
   unsigned char state;
   unsigned char event;
-  unsigned int tm_vzat;
-  unsigned int vol_tm_vzat;
+  uint16_t tm_vzat;
+  uint16_t vol_tm_vzat;
   enum bool cntr_cl;
   enum bool en_cntr_cl;
-  unsigned int cnt_cntr_cl;
-  unsigned int vol_cntr_cl;
+  uint16_t cnt_cntr_cl;
+  uint16_t vol_cntr_cl;
 } Appl_seq;
 
 // unsigned char Appl_seq_des;
@@ -149,13 +149,13 @@ extern struct {
 
 extern struct {
   unsigned char time_485_1;
-  unsigned int client_485_1;
+  uint16_t client_485_1;
   unsigned char start_485_1;
   unsigned char time_485_2;
-  unsigned int client_485_2;
+  uint16_t client_485_2;
   unsigned char start_485_2;
   unsigned char time_232_2;
-  unsigned int client_232_2;
+  uint16_t client_232_2;
   unsigned char start_232_2;
 } Life;
 
@@ -165,11 +165,11 @@ extern unsigned char fl_at_mom_232;
 extern enum t_event_modem event_modem;
 
 extern unsigned char buf_tx_232[VOL_TX_PPP];
-extern unsigned int count_tx_ppp, vol_tx_ppp;
+extern uint16_t count_tx_ppp, vol_tx_ppp;
 
 extern unsigned char Regim;
 extern unsigned char cnt_stm_tm1, cnt_stm_tm2;
-extern unsigned int cnt_key_off;
+extern uint16_t cnt_key_off;
 
 extern void sending_at_pac(void);
 
@@ -181,15 +181,15 @@ extern struct {
   unsigned char list_com[VOL_LIST]; // перечень исполняемых команд
   unsigned char ln_list;            // длина перечня
   unsigned char cnt_com;            // счетчик команд
-  unsigned int cnt_tm_out;          // счетчик времени ожидания ответа
-  unsigned int vol_tm_out;          // предел времени ожидания ответа
-  unsigned int cnt_rx_out;          // счетчик межбайтовый промежуток
-  unsigned int vol_rx_out;          // предел межбайтового промежутка
+  uint16_t cnt_tm_out;          // счетчик времени ожидания ответа
+  uint16_t vol_tm_out;          // предел времени ожидания ответа
+  uint16_t cnt_rx_out;          // счетчик межбайтовый промежуток
+  uint16_t vol_rx_out;          // предел межбайтового промежутка
 } At_com;
 
 extern enum bool command_AT;
 extern enum bool fl_cts_232_ignor;
-extern unsigned int cnt_cts_off;
+extern uint16_t cnt_cts_off;
 
 extern struct {
   unsigned char on : 1;
@@ -219,15 +219,15 @@ __no_init unsigned char Rs232_2_buf_rx_tx[MAX_BUF_RS232_2];
 
 struct // структура описывающая работу порта "RS485_1"
 {
-  unsigned int cnt_bt_rx_tx;  // счетчик байтов на прием-передачу
-  unsigned int cnt_tm_tx_out; // счетчик времени на удержание rts после передачи
-  unsigned int cnt_tm_pre_tx; // счетчик времени на удержание rts перед передачи
-  unsigned int
+  uint16_t cnt_bt_rx_tx;  // счетчик байтов на прием-передачу
+  uint16_t cnt_tm_tx_out; // счетчик времени на удержание rts после передачи
+  uint16_t cnt_tm_pre_tx; // счетчик времени на удержание rts перед передачи
+  uint16_t
       vol_tm_tx_out; // предел счетчик времени на удержание rts после передачи
-  unsigned int cnt_tm_rx_out; //  счетчик времени на определение конца приема
-  unsigned int vol_tm_rx_out; //  предел времени на определение конца приема
-  unsigned int cnt_tm_out;    // счетчик времени на прием
-  unsigned int vol_tm_out;    // предел счетчика времени на прием
+  uint16_t cnt_tm_rx_out; //  счетчик времени на определение конца приема
+  uint16_t vol_tm_rx_out; //  предел времени на определение конца приема
+  uint16_t cnt_tm_out;    // счетчик времени на прием
+  uint16_t vol_tm_out;    // предел счетчика времени на прием
   unsigned char *p_data485;   // указатель на буфер передачи
 } Rs485_1, Rs485_2, Rs232_2;
 
@@ -242,7 +242,7 @@ struct {
 
 extern struct {
   unsigned char data[VOL_RX_PPP]; // сам буфер
-  unsigned int ln_data;           // длина данных
+  uint16_t ln_data;           // длина данных
   enum bool rec;                  // пакет принят
   enum bool busy;                 // буфер занят
   enum bool check_busy;           // проверка занят ли буфер
@@ -288,12 +288,12 @@ extern struct {
 } fl_reg3;
 // EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
-extern unsigned long int summa_temperatura;
-extern unsigned int temperatura;
-extern unsigned int count_summa_temperatura;
+extern uint32_t summa_temperatura;
+extern uint16_t temperatura;
+extern uint16_t count_summa_temperatura;
 
-unsigned int modbus_mem1[SEG1];
-extern unsigned long int arr_tii_32[16];
+uint16_t modbus_mem1[SEG1];
+extern uint32_t arr_tii_32[16];
 
 struct {
 
@@ -301,12 +301,12 @@ struct {
   unsigned char old_pin : 1;
   unsigned char fl_ch_tc : 1;
   unsigned char real_tc;
-  unsigned int count_tc;
+  uint16_t count_tc;
   unsigned char type;
   unsigned char cnt_block_tc;
 } struct_tcc1, struct_tcc2;
 
-unsigned long int summa_adc[4];
+uint32_t summa_adc[4];
 unsigned char count_summa_adc[4];
 
 /// 11111111111111111111111111111 функции
@@ -330,23 +330,26 @@ struct struct_ts str_tc1, str_tc2, str_tc3, str_tc4, str_tc5, str_tc6, str_tc7,
 unsigned char cnt_tu1, cnt_tu2;
 
 void send_485_1(void) {
-  UCSR3B = UCSR3B & ~(RXCIE | RXEN);
-  UCSR3B = UCSR3B | TXCIE; // enable transmit 485_1
-  UDR3 = *Rs485_1.p_data485++;
+  //UCSR3B = UCSR3B & ~(RXCIE | RXEN);
+  //UCSR3B = UCSR3B | TXCIE; // enable transmit 485_1
+  HAL_UART_Transmit_IT(&huart3, &Rs485_1.p_data485, 1 );
+  Rs485_1.p_data485++;
   Rs485_1.cnt_bt_rx_tx--;
 }
 
 void send_485_2(void) {
-  UCSR1B = UCSR1B & ~(RXCIE | RXEN);
-  UCSR1B = UCSR1B | TXCIE; // enable transmit 485_2
-  UDR1 = *Rs485_2.p_data485++;
+  //UCSR1B = UCSR1B & ~(RXCIE | RXEN);
+  //UCSR1B = UCSR1B | TXCIE; // enable transmit 485_2
+  HAL_UART_Transmit_IT(&huart1, &Rs485_2.p_data485, 1 );
+  Rs485_2.p_data485++;
   Rs485_2.cnt_bt_rx_tx--;
 }
 
 void send_232_2(void) {
-  UCSR2B = UCSR2B & ~(RXCIE | RXEN);
-  UCSR2B = UCSR2B | TXCIE; // enable transmit 485_2
-  UDR2 = *Rs232_2.p_data485++;
+  //UCSR2B = UCSR2B & ~(RXCIE | RXEN);
+  //UCSR2B = UCSR2B | TXCIE; // enable transmit 485_2
+  HAL_UART_Transmit_IT(&huart2, &Rs232_2.p_data485, 1 );
+  Rs232_2.p_data485++;
   Rs232_2.cnt_bt_rx_tx--;
 }
 
@@ -380,7 +383,7 @@ void begin_ts(void) {
 }
 
 // void opros_ts(unsigned char num, unsigned char port, unsigned char pin,
-// struct struct_ts *ts, unsigned int *tii)
+// struct struct_ts *ts, uint16_t *tii)
 void opros_ts(unsigned char num, unsigned char port, unsigned char pin,
               struct struct_ts *ts)
 
@@ -705,8 +708,8 @@ void recive_buf2(unsigned char temp) {
 // EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = TIMER0_COMPA_vect
-__interrupt void TIMER0_COMPA_interrupt(void) {
+//#pragma vector = TIMER0_COMPA_vect
+ void AVR_TIMER0_COMPA_interrupt(void) {
 
   fl_wdt.from_timer0 = 1;
 
@@ -1206,8 +1209,8 @@ t_345:;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma vector = TIMER3_COMPA_vect
-__interrupt void TIMER3_COMPA_interrupt(void) {
+//#pragma vector = TIMER3_COMPA_vect
+ void AVR_TIMER3_COMPA_interrupt(void) {
 
   fl_wdt.from_timer3 = 1;
 
@@ -1286,10 +1289,10 @@ next_tm001:
 
     crc_tii = func_crc_tii();
 
-    *(unsigned long int *)&buf_tx_232[0] = burst_ds_r();
-    *(unsigned long int *)&buf_tx_232[4] = cnt_outcom;
-    *(unsigned long int *)&buf_tx_232[8] = cnt_incom;
-    *(unsigned int *)&buf_tx_232[L_TRAF - 2] =
+    *(uint32_t *)&buf_tx_232[0] = burst_ds_r();
+    *(uint32_t *)&buf_tx_232[4] = cnt_outcom;
+    *(uint32_t *)&buf_tx_232[8] = cnt_incom;
+    *(uint16_t *)&buf_tx_232[L_TRAF - 2] =
         crc_m1(&buf_tx_232[0], L_TRAF - 2, 0xffff);
     WrArrayToFlesh(A_TRAF, &buf_tx_232[0], L_TRAF, 0, 0);
     lock_it();
@@ -1815,4 +1818,22 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   
   if(huart->Instance==USART5) AVR_USART0_RX_interrupt();
   
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == TIM1)
+    {
+        // Код по прерыванию TIM1 340 mks TC
+
+        AVR_TIMER0_COMPA_interrupt();
+    }
+
+if (htim->Instance == TIM3)
+    {
+        // Код по прерыванию TIM3 1 sec
+      AVR_TIMER3_COMPA_interrupt(void);
+    
+    }
+    
 }
